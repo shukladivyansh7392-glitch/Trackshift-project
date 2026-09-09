@@ -1,0 +1,504 @@
+:root {
+  --bg-dark: #0a0e17;
+  --card-bg: #111827;
+  --card-border: #1f293d;
+  --text-main: #ffffff;
+  --text-sub: #8a99ad;
+  --accent-blue: #0088ff;
+  --accent-cyan: #00d2be;
+  --color-attack: #00e676; /* Green action banner */
+  --color-hold: #ffb300;   /* Yellow action banner */
+  --color-save: #00e5ff;   /* Cyan action banner */
+  
+  /* Full screen glow colors */
+  --glow-red: rgba(255, 23, 68, 0.45);
+  --glow-yellow: rgba(255, 179, 0, 0.45);
+  --glow-green: rgba(0, 230, 118, 0.45);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+body {
+  background-color: var(--bg-dark);
+  color: var(--text-main);
+  min-height: 100vh;
+  overflow-x: hidden;
+  position: relative;
+}
+
+/* Fullscreen Glow Layer */
+.glow-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  z-index: 9999;
+  transition: box-shadow 0.4s ease, background 0.4s ease;
+}
+
+.glow-overlay.glow-attack {
+  box-shadow: inset 0 0 100px 30px var(--glow-red);
+  border: 4px solid rgba(255, 23, 68, 0.8);
+}
+
+.glow-overlay.glow-hold {
+  box-shadow: inset 0 0 100px 30px var(--glow-yellow);
+  border: 4px solid rgba(255, 179, 0, 0.8);
+}
+
+.glow-overlay.glow-save {
+  box-shadow: inset 0 0 100px 30px var(--glow-green);
+  border: 4px solid rgba(0, 230, 118, 0.8);
+}
+
+/* App Layout */
+.app-container {
+  display: flex;
+  min-height: 100vh;
+}
+
+.sidebar {
+  width: 220px;
+  background: #0d131f;
+  border-right: 1px solid var(--card-border);
+  padding: 20px 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.brand {
+  padding: 0 20px 25px;
+}
+
+.menu {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.menu-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 20px;
+  color: var(--text-sub);
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.2s;
+}
+
+.menu-item:hover, .menu-item.active {
+  color: #fff;
+  background: #1a2333;
+  border-left: 3px solid var(--accent-blue);
+}
+
+/* Main Area */
+.main-content {
+  flex: 1;
+  padding: 20px 30px;
+  overflow-y: auto;
+}
+
+.top-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.top-bar h1 {
+  font-size: 22px;
+  font-weight: 700;
+}
+
+.subtitle {
+  font-size: 13px;
+  color: var(--text-sub);
+}
+
+.status-group {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.status-badge {
+  background: rgba(0, 210, 190, 0.1);
+  color: var(--accent-cyan);
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.pulse-dot {
+  width: 8px;
+  height: 8px;
+  background: var(--accent-cyan);
+  border-radius: 50%;
+  box-shadow: 0 0 8px var(--accent-cyan);
+}
+
+.icon-btn {
+  background: none;
+  border: none;
+  color: var(--text-sub);
+  font-size: 18px;
+  cursor: pointer;
+}
+
+/* Grid Layout */
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: 1.3fr 1.3fr 1fr;
+  gap: 16px;
+}
+
+.card {
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: 12px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+}
+
+.card h3 {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-sub);
+  margin-bottom: 12px;
+}
+
+/* Video Card */
+.video-card {
+  position: relative;
+  overflow: hidden;
+  padding: 0;
+  min-height: 220px;
+}
+
+.video-placeholder img {
+  width: 100%;
+  height: 220px;
+  object-fit: cover;
+  filter: brightness(0.85);
+}
+
+.video-overlay-top {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  right: 12px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.pill-badge {
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(4px);
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+.video-overlay-bottom {
+  position: absolute;
+  bottom: 12px;
+  left: 12px;
+  right: 12px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.stat-pill {
+  background: rgba(0, 0, 0, 0.75);
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: bold;
+}
+
+/* Telemetry Grid */
+.telemetry-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+}
+
+.telemetry-box {
+  background: #0b101b;
+  border: 1px solid #1a2436;
+  border-radius: 8px;
+  padding: 10px;
+}
+
+.telemetry-box .label {
+  font-size: 11px;
+  color: var(--text-sub);
+  display: block;
+}
+
+.telemetry-box .value {
+  font-size: 20px;
+  font-weight: 700;
+  margin: 4px 0;
+}
+
+.telemetry-box .trend {
+  font-size: 11px;
+}
+
+.trend.up { color: #00e676; }
+.trend.down { color: #ff3d00; }
+
+/* Race Order Table */
+.race-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12px;
+}
+
+.race-table th {
+  color: var(--text-sub);
+  text-align: left;
+  padding-bottom: 8px;
+}
+
+.race-table td {
+  padding: 6px 0;
+  border-bottom: 1px solid #1a243d;
+}
+
+.race-table tr.active-row {
+  background: rgba(0, 136, 255, 0.15);
+  font-weight: bold;
+}
+
+.dot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  margin-right: 6px;
+}
+
+.dot.blue { background: #0088ff; }
+.dot.orange { background: #ff9100; }
+.dot.purple { background: #d500f9; }
+.dot.cyan { background: #00d2be; }
+.dot.red { background: #ff1744; }
+
+.text-right { text-align: right; }
+
+/* Ring Gauges */
+.ring-group {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  height: 100%;
+}
+
+.ring-item {
+  position: relative;
+  text-align: center;
+}
+
+.ring-label {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  flex-direction: column;
+}
+
+.ring-label .title { font-size: 9px; color: var(--text-sub); }
+.ring-label .percent { font-size: 16px; font-weight: bold; }
+.ring-label .sub { font-size: 10px; color: var(--accent-cyan); }
+
+/* Action Card */
+.action-banner {
+  background: var(--color-attack);
+  color: #000;
+  text-align: center;
+  font-size: 20px;
+  font-weight: 900;
+  padding: 14px;
+  border-radius: 8px;
+  letter-spacing: 1px;
+  box-shadow: 0 0 20px rgba(0, 230, 118, 0.4);
+  transition: all 0.3s;
+}
+
+.bars-container {
+  margin-top: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.bar-labels {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  color: var(--text-sub);
+  margin-bottom: 4px;
+}
+
+.bar-bg {
+  background: #1a2436;
+  height: 8px;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.bar-fill {
+  background: var(--accent-cyan);
+  height: 100%;
+  transition: width 0.3s ease;
+}
+
+/* Reason List */
+.reasons-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  font-size: 12px;
+  color: #d1d5db;
+}
+
+/* Telemetry Trends Chart */
+.chart-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.btn-toggle-group {
+  display: flex;
+  background: #0b101b;
+  border-radius: 6px;
+  padding: 2px;
+}
+
+.btn-toggle {
+  background: none;
+  border: none;
+  color: var(--text-sub);
+  padding: 4px 8px;
+  font-size: 11px;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.btn-toggle.active {
+  background: var(--accent-blue);
+  color: #fff;
+}
+
+.chart-wrapper {
+  height: 160px;
+  width: 100%;
+}
+
+/* What-if Simulator */
+.sim-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.sim-controls label {
+  display: block;
+  font-size: 11px;
+  color: var(--text-sub);
+  margin-top: 6px;
+}
+
+.sim-controls input[type="range"], .sim-controls select {
+  width: 100%;
+  margin-top: 2px;
+}
+
+.sim-controls select {
+  background: #0b101b;
+  color: #fff;
+  border: 1px solid var(--card-border);
+  padding: 4px;
+  border-radius: 4px;
+}
+
+.btn-primary {
+  margin-top: 10px;
+  width: 100%;
+  background: var(--accent-blue);
+  color: #fff;
+  border: none;
+  padding: 8px;
+  border-radius: 6px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.sim-results {
+  background: #0b101b;
+  padding: 10px;
+  border-radius: 8px;
+  font-size: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.sim-res-row {
+  display: flex;
+  justify-content: space-between;
+  color: var(--text-sub);
+}
+
+.sim-pill-res {
+  margin-top: auto;
+  background: rgba(0, 230, 118, 0.15);
+  color: #00e676;
+  border: 1px solid #00e676;
+  text-align: center;
+  padding: 6px;
+  border-radius: 6px;
+  font-weight: bold;
+  font-size: 11px;
+}
+
+/* Track Map */
+.map-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.track-svg {
+  width: 100%;
+  height: 140px;
+}
+
+.map-legend {
+  display: flex;
+  gap: 12px;
+  font-size: 10px;
+  color: var(--text-sub);
+}

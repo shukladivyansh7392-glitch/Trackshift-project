@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Energy & Overtake Intelligence</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+  <!-- Dynamic Glow Overlay -->
+  <div id="glow-overlay" class="glow-overlay"></div>
+
+  <div class="app-container">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="brand">
+        <svg class="f1-logo" viewBox="0 0 120 30" width="100">
+          <path fill="#e10600" d="M12,0 C5,0 0,5 0,12 L0,18 C0,25 5,30 12,30 L30,30 L20,10 L45,10 L35,30 L50,30 L70,0 Z"/>
+        </svg>
+      </div>
+      <nav class="menu">
+        <a href="#" class="menu-item active">
+          <span class="icon">📊</span> Dashboard
+        </a>
+        <a href="#" class="menu-item">
+          <span class="icon">🏁</span> Race Simulation
+        </a>
+        <a href="#" class="menu-item">
+          <span class="icon">⚡</span> What-if Simulator
+        </a>
+        <a href="#" class="menu-item">
+          <span class="icon">📈</span> Analytics
+        </a>
+        <a href="#" class="menu-item">
+          <span class="icon">⚙️</span> Settings
+        </a>
+      </nav>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <!-- Top Header -->
+      <header class="top-bar">
+        <div class="title-group">
+          <h1>Energy & Overtake Intelligence</h1>
+          <p class="subtitle">Smarter Decisions. More Overtakes. Better Energy.</p>
+        </div>
+        <div class="status-group">
+          <span class="status-badge"><span class="pulse-dot"></span> Live Race</span>
+          <span class="lap-info" id="lap-counter">Lap 18 / 40</span>
+          <span class="time-info" id="clock-display">15:42:17</span>
+          <button class="icon-btn">⚙️</button>
+        </div>
+      </header>
+
+      <!-- Dashboard Grid -->
+      <div class="dashboard-grid">
+        
+        <!-- Row 1 Left: Video / Camera Stream -->
+        <div class="card video-card">
+          <div class="video-overlay-top">
+            <span class="pill-badge" id="hud-lap">LAP 18/40</span>
+            <span class="pill-badge position-badge" id="hud-pos">P4 <small>(+1.2s)</small></span>
+          </div>
+          <!-- Race Camera View -->
+          <div class="video-placeholder">
+            <img src="https://images.unsplash.com/photo-1568605117036-5fe5e7bab0b7?auto=format&fit=crop&w=1200&q=80" alt="F1 Camera View">
+          </div>
+          <div class="video-overlay-bottom">
+            <div class="stat-pill">🏎‍🟀 <span id="hud-speed">284</span> km/h</div>
+            <div class="stat-pill">🔋 <span id="hud-battery">72%</span></div>
+          </div>
+        </div>
+
+        <!-- Row 1 Middle: Current Telemetry -->
+        <div class="card telemetry-card">
+          <h3>Current Telemetry</h3>
+          <div class="telemetry-grid">
+            <div class="telemetry-box">
+              <span class="label">Gap</span>
+              <div class="value" id="telemetry-gap">0.55 <small>s</small></div>
+              <span class="trend down" id="gap-trend">↓ 0.27s</span>
+            </div>
+            <div class="telemetry-box">
+              <span class="label">Closing Speed</span>
+              <div class="value" id="telemetry-closing">+14 <small>km/h</small></div>
+              <span class="trend up" id="closing-trend">↑ 3 km/h</span>
+            </div>
+            <div class="telemetry-box">
+              <span class="label">Speed (Car A)</span>
+              <div class="value" id="telemetry-speed">284 <small>km/h</small></div>
+              <span class="trend up" id="speed-trend">↑ 12 km/h</span>
+            </div>
+            <div class="telemetry-box">
+              <span class="label">Battery SOC</span>
+              <div class="value" id="telemetry-soc">72%</div>
+              <span class="trend up" id="soc-trend">↑ 4%</span>
+            </div>
+            <div class="telemetry-box">
+              <span class="label">Tyre Condition</span>
+              <div class="value" id="telemetry-tyre">81%</div>
+              <span class="trend up" id="tyre-trend">↑ 2%</span>
+            </div>
+            <div class="telemetry-box">
+              <span class="label">Track Position</span>
+              <div class="value" id="telemetry-pos">P4</div>
+              <span class="trend up">↑ 1 position</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Row 1 Right: Race Order -->
+        <div class="card race-order-card">
+          <h3>Race Order</h3>
+          <table class="race-table">
+            <thead>
+              <tr><th>Pos</th><th>Driver</th><th class="text-right">Gap</th></tr>
+            </thead>
+            <tbody id="race-order-body">
+              <tr><td>1</td><td><span class="dot blue"></span> Car 1</td><td class="text-right">-</td></tr>
+              <tr><td>2</td><td><span class="dot orange"></span> Car 2</td><td class="text-right">+0.8s</td></tr>
+              <tr><td>3</td><td><span class="dot purple"></span> Car 3</td><td class="text-right">+0.6s</td></tr>
+              <tr class="active-row"><td>4</td><td><span class="dot cyan"></span> You (Car A)</td><td class="text-right" id="order-gap">0.55s</td></tr>
+              <tr><td>5</td><td><span class="dot orange"></span> Car 5</td><td class="text-right">+1.4s</td></tr>
+              <tr><td>6</td><td><span class="dot red"></span> Car 6</td><td class="text-right">+2.1s</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Row 2 Left: ML Ring Gauges -->
+        <div class="card gauge-card">
+          <div class="ring-group">
+            <div class="ring-item">
+              <canvas id="gaugeOvertake" width="100" height="100"></canvas>
+              <div class="ring-label">
+                <span class="title">Overtake Probability</span>
+                <span class="percent" id="val-overtake">87%</span>
+                <span class="sub" id="sub-overtake">High</span>
+              </div>
+            </div>
+            <div class="ring-item">
+              <canvas id="gaugeEnergy" width="100" height="100"></canvas>
+              <div class="ring-label">
+                <span class="title">Energy Requirement</span>
+                <span class="percent" id="val-energy">12%</span>
+                <span class="sub" id="sub-energy">Low</span>
+              </div>
+            </div>
+            <div class="ring-item">
+              <canvas id="gaugeRisk" width="100" height="100"></canvas>
+              <div class="ring-label">
+                <span class="title">Risk Score</span>
+                <span class="percent" id="val-risk">18%</span>
+                <span class="sub" id="sub-risk">Low</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Row 2 Middle: AI Action Panel -->
+        <div class="card action-card">
+          <div class="action-header">
+            <h3>⚡ Recommended Action</h3>
+          </div>
+          <div class="action-banner attack" id="action-banner">
+            <span id="action-text">ATTACK NOW</span>
+          </div>
+
+          <div class="bars-container">
+            <div class="progress-group">
+              <div class="bar-labels"><span>Confidence</span><span id="val-confidence">91%</span></div>
+              <div class="bar-bg"><div class="bar-fill" id="bar-confidence" style="width: 91%;"></div></div>
+            </div>
+            <div class="progress-group">
+              <div class="bar-labels"><span>Deployment Level</span><span id="val-deployment">65%</span></div>
+              <div class="bar-bg"><div class="bar-fill" id="bar-deployment" style="width: 65%;"></div></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Row 2 Right: Decision Reasons -->
+        <div class="card reason-card">
+          <h3>Why this decision?</h3>
+          <ul class="reasons-list" id="reasons-list">
+            <li>✔️ High closing speed (+14 km/h)</li>
+            <li>✔️ Long straight (850 m)</li>
+            <li>✔️ Healthy energy reserve (72%)</li>
+            <li>✔️ Favourable braking zone</li>
+            <li>✔️ Low defensive response probability</li>
+          </ul>
+        </div>
+
+        <!-- Row 3 Left: Telemetry Trends Chart -->
+        <div class="card chart-card">
+          <div class="chart-header">
+            <h3>Telemetry Trends</h3>
+            <div class="btn-toggle-group">
+              <button class="btn-toggle active">Speed</button>
+              <button class="btn-toggle">Battery</button>
+              <button class="btn-toggle">Tyre</button>
+              <button class="btn-toggle">Gap</button>
+            </div>
+          </div>
+          <div class="chart-wrapper">
+            <canvas id="trendsChart"></canvas>
+          </div>
+        </div>
+
+        <!-- Row 3 Middle: What-if Simulator -->
+        <div class="card simulator-card">
+          <h3>What-if Simulator</h3>
+          <div class="sim-grid">
+            <div class="sim-controls">
+              <label>Battery SOC: <span id="sim-soc-val">72%</span></label>
+              <input type="range" id="sim-soc" min="0" max="100" value="72">
+
+              <label>Tyre Condition: <span id="sim-tyre-val">81%</span></label>
+              <input type="range" id="sim-tyre" min="0" max="100" value="81">
+
+              <label>Opponent Defense</label>
+              <select id="sim-defense">
+                <option value="Low">Low</option>
+                <option value="Medium" selected>Medium</option>
+                <option value="High">High</option>
+              </select>
+
+              <label>Deployment: <span id="sim-deploy-val">65%</span></label>
+              <input type="range" id="sim-deploy" min="0" max="100" value="65">
+
+              <button class="btn-primary" onclick="runSim()">Run Simulation</button>
+            </div>
+
+            <div class="sim-results">
+              <h4>Simulation Result</h4>
+              <div class="sim-res-row"><span>Success Probability</span><strong id="sim-res-prob">87%</strong></div>
+              <div class="sim-res-row"><span>Expected Position Gain</span><strong class="green" id="sim-res-gain">+1</strong></div>
+              <div class="sim-res-row"><span>Energy Cost</span><strong id="sim-res-cost">12%</strong></div>
+              <div class="sim-res-row"><span>Risk Level</span><strong class="green" id="sim-res-risk">Low</strong></div>
+              <div class="sim-pill-res" id="sim-res-badge">ATTACK RECOMMENDED</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Row 3 Right: Track Map -->
+        <div class="card map-card">
+          <h3>Track Map</h3>
+          <div class="map-container">
+            <svg class="track-svg" viewBox="0 0 400 250">
+              <path d="M 60,60 C 150,20 280,20 340,70 C 390,120 370,180 300,200 C 230,220 180,180 140,190 C 100,200 40,160 60,60 Z" 
+                    fill="none" stroke="#1f2d40" stroke-width="12" stroke-linecap="round"/>
+              <path d="M 60,60 C 150,20 280,20 340,70 C 390,120 370,180 300,200 C 230,220 180,180 140,190 C 100,200 40,160 60,60 Z" 
+                    fill="none" stroke="#00d2be" stroke-width="3" stroke-dasharray="6,6"/>
+              
+              <!-- Cars on Track -->
+              <circle id="car-opponent" cx="300" cy="200" r="6" fill="#ffb800" />
+              <circle id="car-user" cx="280" cy="200" r="7" fill="#00d2be" stroke="#fff" stroke-width="1.5"/>
+            </svg>
+            <div class="map-legend">
+              <span><span class="dot cyan"></span> You (Car A)</span>
+              <span><span class="dot orange"></span> Opponent (Car B)</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </main>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
